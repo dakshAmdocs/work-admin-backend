@@ -37,8 +37,8 @@ public class Project {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "technologyUser")
-    private String technologyUser;
+    @Column(name = "technologyUsed")
+    private String technologyUsed;
 
     @Column(name = "jiraLink")
     private String jiraLink;
