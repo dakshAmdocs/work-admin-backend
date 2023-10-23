@@ -45,6 +45,6 @@ public class Project {
 
     @OneToMany(cascade= CascadeType.ALL)
     @JoinColumn(name = "allocationId", referencedColumnName = "id")
-    private List<Allocation> theatre;
+    private List<Allocation> allocation;
 
 }

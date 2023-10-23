@@ -5,26 +5,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.team1.workadminbackend.model.Project;
-import com.team1.workadminbackend.repository.ProjectRepository;
-
-import java.util.List;
-import java.util.Optional;
+import com.team1.workadminbackend.service.ProjectService;
 
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
 
-    private final ProjectRepository projectRepository;
+    private final ProjectService projectService;
 
     @Autowired
-    public ProjectController(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
     }
 
     @PostMapping
     public ResponseEntity<Project> addProject(@RequestBody Project project) {
         try {
-            Project newProject = projectRepository.save(project);
+            Project newProject = projectService.addProject(project);
             return new ResponseEntity<>(newProject, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -34,21 +31,11 @@ public class ProjectController {
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project updatedProject) {
         try {
-            Optional<Project> existingProject = projectRepository.findById(id);
-            if (existingProject.isPresent()) {
-                Project project = existingProject.get();
-                project.setName(updatedProject.getName());
-                project.setProjectLead(updatedProject.getProjectLead());
-                project.setStartDate(updatedProject.getStartDate());
-                project.setEndDate(updatedProject.getEndDate());
-                project.setStatus(updatedProject.getStatus());
-                project.setTechnologyUsed(updatedProject.getTechnologyUsed());
-                project.setJiraLink(updatedProject.getJiraLink());
-
-                return new ResponseEntity<>(projectRepository.save(project), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            Project updated = projectService.updateProject(id, updatedProject);
+            if (updated != null) {
+                return new ResponseEntity<>(updated, HttpStatus.OK);
             }
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
