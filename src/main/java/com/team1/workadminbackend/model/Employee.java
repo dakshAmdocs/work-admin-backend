@@ -26,6 +26,9 @@ public class Employee {
     @Column(name = "expertise")
     private String expertise;
 
+    @Column(name = "location")
+    private String location;
+
     @OneToMany(cascade= CascadeType.ALL)
     @JoinColumn(name = "allocationId", referencedColumnName = "id")
     private List<Allocation> allocation;
